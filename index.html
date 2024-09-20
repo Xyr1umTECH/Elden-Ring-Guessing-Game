@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -167,7 +167,7 @@
                 }
 
                 if (guessCount === 4) {
-                    messageDiv.textContent += " You've used all your guesses!";
+                    messageDiv.textContent = `You've used all your guesses! The correct answer was ${randomCharacter}.`;
                     revealAllEmojis();
                     guessButton.style.display = 'none'; // Hide guess button
                     playAgainButton.style.display = 'block'; // Show play again button

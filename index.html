@@ -183,8 +183,12 @@
 
     guessButton.addEventListener("click", handleGuess);
     guessInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter" && guessButton.style.display !== 'none') {
-            handleGuess();
+        if (event.key === "Enter") {
+            if (guessButton.style.display !== 'none') {
+                handleGuess();
+            } else {
+                startGame(); // Restart the game if Play Again is visible
+            }
         }
     });
 

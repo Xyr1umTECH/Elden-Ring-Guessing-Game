@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring Guessing Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+            transition: background-color 0.5s;
+        }
+        h1 {
+            margin-bottom: 20px;
+            animation: fadeIn 1s;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 10px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            border: 2px solid #fff;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3a3a3a;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            animation: fadeIn 1s;
+        }
+        #emojiContainer {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .emoji {
+            font-size: 30px;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s;
+        }
+        #playAgainButton {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Elden Ring Guessing Game</h1>
+<p>Guess the character's name!</p>
+<input type="text" id="guessInput" placeholder="Enter your guess">
+<button id="guessButton">Guess</button>
+<button id="playAgainButton">Play Again</button>
+<div id="message"></div>
+<div id="emojiContainer">
+    <span class="emoji" id="emoji1"></span>
+    <span class="emoji" id="emoji2"></span>
+    <span class="emoji" id="emoji3"></span>
+    <span class="emoji" id="emoji4"></span>
+</div>
+
+<script>
+    const characters = {
+        "Melina": ["🧝‍♀️", "🌌", "🌿", "⚔️"],
+        "Radahn": ["🪐", "🏇", "🛡️", "💥"],
+        "Malenia": ["🌸", "🗡️", "🔥", "🦋"],
+        "Gideon": ["📚", "⚔️", "🧙‍♂️", "🌠"],
+        "Ranni": ["🌙", "🔮", "🌌", "🏰"],
+        "Margit": ["🐉", "🗡️", "🛡️", "💔"],
+        "Godrick": ["👑", "⚔️", "🔥", "💪"],
+        "Blaidd": ["🐺", "🗡️", "🌲", "🌕"],
+        "Fia": ["🛏️", "💤", "🤝", "🌑"],
+        "Maliketh": ["⚔️", "🐉", "⚡", "🔥"],
+        "Elden Beast": ["✨", "🐉", "💫", "⚔️"],
+        "Varré": ["🎭", "🦇", "👀", "🍷"],
+        "Marika": ["🏛️", "✨", "⛓️", "👸"],
+        "Radagon": ["⚒️", "⛓️", "🛡️", "🔨"],
+        "Godfrey": ["🦁", "🛡️", "⚔️", "👑"],
+        "Hoarah Loux": ["🦁", "🏋️‍♂️", "🗡️", "🔥"],
+        "Morgott": ["👑", "👻", "⚔️", "🌌"],
+        "Rykard": ["🐍", "🔥", "🗡️", "🛡️"],
+        "Lichdragon Fortissax": ["🐉", "⚡", "🌪️", "👁️"],
+        "Mohg": ["🩸", "🔥", "⚔️", "🦇"],
+        "Placidusax": ["🐉", "🌪️", "⚡", "✨"]
+    };
+
+    let randomCharacter;
+    let emojis;
+    let shuffledEmojis;
+    let guessCount = 0;
+
+    const guessButton = document.getElementById("guessButton");
+    const playAgainButton = document.getElementById("playAgainButton");
+    const guessInput = document.getElementById("guessInput");
+    const messageDiv = document.getElementById("message");
+    const emojiElements = document.querySelectorAll(".emoji");
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startGame() {
+        guessCount = 0;
+        randomCharacter = Object.keys(characters)[Math.floor(Math.random() * Object.keys(characters).length)];
+        emojis = characters[randomCharacter];
+        shuffledEmojis = shuffle([...emojis]);  // Randomize the emojis
+        emojiElements.forEach((emoji, index) => {
+            emoji.textContent = '';
+            emoji.style.opacity = 0;
+        });
+        messageDiv.textContent = '';
+        guessInput.value = '';
+        playAgainButton.style.display = 'none';
+        guessButton.style.display = 'inline-block'; // Show guess button
+        emojiElements[0].textContent = shuffledEmojis[0];
+        emojiElements[0].style.opacity = 1;
+    }
+
+    guessButton.addEventListener("click", () => {
+        const userGuess = guessInput.value.trim();
+        guessCount++;
+
+        if (userGuess) {
+            if (userGuess.toLowerCase() === randomCharacter.toLowerCase()) {
+                messageDiv.textContent = "Correct! You guessed " + randomCharacter + "!";
+                messageDiv.style.color = "green";
+                revealAllEmojis();
+                guessButton.style.display = 'none'; // Hide guess button
+                playAgainButton.style.display = 'block'; // Show play again button
+            } else {
+                messageDiv.textContent = "Wrong guess! Try again.";
+                messageDiv.style.color = "red";
+
+                if (guessCount < 4) {
+                    emojiElements[guessCount].textContent = shuffledEmojis[guessCount];
+                    emojiElements[guessCount].style.opacity = 1;
+                }
+
+                if (guessCount === 4) {
+                    messageDiv.textContent += " You've used all your guesses!";
+                    revealAllEmojis();
+                    guessButton.style.display = 'none'; // Hide guess button
+                    playAgainButton.style.display = 'block'; // Show play again button
+                }
+            }
+            guessInput.value = '';
+        } else {
+            messageDiv.textContent = "Please enter a name!";
+            messageDiv.style.color = "orange";
+        }
+    });
+
+    function revealAllEmojis() {
+        emojiElements.forEach((emoji, index) => {
+            emoji.textContent = shuffledEmojis[index];
+            emoji.style.opacity = 1;
+        });
+    }
+
+    playAgainButton.addEventListener("click", startGame);
+
+    // Start the game on page load
+    startGame();
+</script>
+
+</body>
+</html>

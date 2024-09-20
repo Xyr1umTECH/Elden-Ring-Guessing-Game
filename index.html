@@ -144,9 +144,10 @@
         guessButton.style.display = 'inline-block'; // Show guess button
         emojiElements[0].textContent = shuffledEmojis[0];
         emojiElements[0].style.opacity = 1;
+        guessInput.focus(); // Keep focus on the input
     }
 
-    guessButton.addEventListener("click", () => {
+    function handleGuess() {
         const userGuess = guessInput.value.trim();
         guessCount++;
 
@@ -174,9 +175,24 @@
                 }
             }
             guessInput.value = '';
+            guessInput.focus(); // Keep focus on the input
         } else {
             messageDiv.textContent = "Please enter a name!";
             messageDiv.style.color = "orange";
+        }
+    }
+
+    guessButton.addEventListener("click", handleGuess);
+    guessInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            handleGuess();
+        }
+    });
+
+    playAgainButton.addEventListener("click", startGame);
+    playAgainButton.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            startGame();
         }
     });
 
@@ -186,8 +202,6 @@
             emoji.style.opacity = 1;
         });
     }
-
-    playAgainButton.addEventListener("click", startGame);
 
     // Start the game on page load
     startGame();

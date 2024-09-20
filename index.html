@@ -183,7 +183,7 @@
 
     guessButton.addEventListener("click", handleGuess);
     guessInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && guessButton.style.display !== 'none') {
             handleGuess();
         }
     });
